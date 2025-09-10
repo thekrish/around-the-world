@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Location {
+  id        String @id @default(cuid())
+  name      String
+  city      String
+  country   String
+  latitude  Float
+  longitude Float
+  
+  // Relations for departure and arrival
+  departureTrips Trip[] @relation("DepartureLocation")
+  arrivalTrips   Trip[] @relation("ArrivalLocation")
+  
+  @@unique([latitude, longitude])
+}
+
+model Trip {
+  id             String      @id @default(cuid())
+  title          String      // Trip title/name (e.g., "Vegas Weekend", "Thanksgiving in Houston")
+  
+  // Trip type - determines animation behavior
+  type           TripType    @default(ONE_WAY)
+  
+  // For both trip types
+  departureLocationId String
+  departureLocation   Location @relation("DepartureLocation", fields: [departureLocationId], references: [id])
+  
+  // For round trips: same as departure. For one-way: different destination
+  arrivalLocationId   String  
+  arrivalLocation     Location @relation("ArrivalLocation", fields: [arrivalLocationId], references: [id])
+  
+  startDate      DateTime
+  endDate        DateTime
+  travelers      Traveler[]
+  transport      Transport   @default(PLANE)
+  notes          String?     // General trip notes/memories
+  attendees      Attendee[]  // People who joined the trip
+  tags           Tag[]       // Trip tags/categories
+  order          Int         // For timeline ordering
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
+
+model Attendee {
+  id       String @id @default(cuid())
+  name     String
+  relation String? // e.g., "friend", "family", "colleague"
+  trips    Trip[]
+}
+
+model Tag {
+  id          String @id @default(cuid())
+  name        String @unique // e.g., "vacation", "business", "wedding", "family"
+  color       String // Hex color for UI representation
+  description String?
+  trips       Trip[]
+}
+
+model Traveler {
+  id     String @id @default(cuid())
+  name   String @unique
+  color  String // Hex color for UI representation
+  trips  Trip[]
+}
+
+enum TripType {
+  ROUND_TRIP  // Return to same location (e.g., Vegas weekend)
+  ONE_WAY     // End at different location (e.g., LA to Houston)
+}
+
+enum Transport {
+  PLANE
+  CAR
+  TRAIN
+  BOAT
+  WALKING
+}
