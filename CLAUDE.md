@@ -2,6 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Repository Information
+
+- **GitHub Repository**: https://github.com/thekrish/around-the-world
+- **Primary Branch**: main
+- **Created**: September 2025
+- **License**: Not specified (private/personal project)
+
 ## Project Overview
 
 An interactive travel journey mapping application built with Next.js 15 that visualizes personal travel experiences on a world map. Users can add trips, view animated journey paths, and manage travel memories with a comprehensive timeline interface.
@@ -96,3 +103,17 @@ An interactive travel journey mapping application built with Next.js 15 that vis
 - Trip ordering is managed via `order` field for timeline consistency
 - Color theming is handled through Tailwind custom properties and database color fields
 - Geospatial data uses standard latitude/longitude decimal degrees
+
+## Deployment and Collaboration
+
+### GitHub Repository
+- Repository URL: https://github.com/thekrish/around-the-world
+- Clone command: `git clone https://github.com/thekrish/around-the-world.git`
+- To contribute: Fork the repository and create pull requests to the main branch
+
+### Environment Setup
+1. Clone the repository
+2. Run `npm install` to install dependencies
+3. Run `npx prisma generate` to set up the database client
+4. Run `npx prisma db push` to create the SQLite database
+5. Run `npm run dev` to start development server
